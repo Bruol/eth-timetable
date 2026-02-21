@@ -10,6 +10,15 @@ const SCOPES = [
   "https://www.googleapis.com/auth/calendar.events",
 ];
 
+function icsDateToRfc3339(icsDate: string): string {
+  const match = icsDate.match(/^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})$/);
+  if (match) {
+    const [, year, month, day, hour, minute, second] = match;
+    return `${year}-${month}-${day}T${hour}:${minute}:${second}`;
+  }
+  return icsDate;
+}
+
 interface CalendarEvent {
   summary: string;
   description?: string;
@@ -39,8 +48,8 @@ function parseIcsForGoogleCalendar(content: string): CalendarEvent[] {
         if (currentField === "SUMMARY") currentEvent.summary = currentValue;
         else if (currentField === "DESCRIPTION") currentEvent.description = currentValue;
         else if (currentField === "LOCATION") currentEvent.location = currentValue;
-        else if (currentField === "DTSTART") currentEvent.start = { dateTime: currentValue, timeZone: "Europe/Zurich" };
-        else if (currentField === "DTEND") currentEvent.end = { dateTime: currentValue, timeZone: "Europe/Zurich" };
+        else if (currentField === "DTSTART") currentEvent.start = { dateTime: icsDateToRfc3339(currentValue), timeZone: "Europe/Zurich" };
+        else if (currentField === "DTEND") currentEvent.end = { dateTime: icsDateToRfc3339(currentValue), timeZone: "Europe/Zurich" };
       }
 
       if (currentEvent.summary && currentEvent.start && currentEvent.end) {
@@ -56,8 +65,8 @@ function parseIcsForGoogleCalendar(content: string): CalendarEvent[] {
           if (currentField === "SUMMARY") currentEvent.summary = currentValue;
           else if (currentField === "DESCRIPTION") currentEvent.description = currentValue;
           else if (currentField === "LOCATION") currentEvent.location = currentValue;
-          else if (currentField === "DTSTART") currentEvent.start = { dateTime: currentValue, timeZone: "Europe/Zurich" };
-          else if (currentField === "DTEND") currentEvent.end = { dateTime: currentValue, timeZone: "Europe/Zurich" };
+          else if (currentField === "DTSTART") currentEvent.start = { dateTime: icsDateToRfc3339(currentValue), timeZone: "Europe/Zurich" };
+          else if (currentField === "DTEND") currentEvent.end = { dateTime: icsDateToRfc3339(currentValue), timeZone: "Europe/Zurich" };
         }
         const colonIndex = line.indexOf(":");
         if (colonIndex > 0) {
@@ -166,7 +175,9 @@ async function importEvents(
       });
       imported++;
     } catch (error: any) {
-      console.error(`Failed to import event: ${event.summary}`, error.message);
+      console.error(`Failed to import event: ${event.summary}`);
+      console.error(`  Start: ${event.start.dateTime}, End: ${event.end.dateTime}`);
+      console.error(`  Error: ${error.response?.data?.error?.message || error.message}`);
     }
   }
   console.log(`Imported ${imported}/${events.length} events`);

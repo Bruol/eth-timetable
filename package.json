@@ -5,7 +5,9 @@
     "split": "bun run split-ics.ts",
     "split:file": "bun run split-ics.ts --",
     "google-import": "bun run import-to-google-calendar.ts",
-    "google-import:config": "bun run import-to-google-calendar.ts --"
+    "google-import:config": "bun run import-to-google-calendar.ts --",
+    "google-delete": "bun run --bun delete-calendars.ts",
+    "google-delete:auto": "bun run --bun delete-calendars.ts -- --auto"
   },
   "devDependencies": {
     "@types/bun": "latest"
