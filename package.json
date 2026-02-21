@@ -1,0 +1,19 @@
+{
+  "name": "eth_timetable",
+  "private": true,
+  "scripts": {
+    "split": "bun run split-ics.ts",
+    "split:file": "bun run split-ics.ts --",
+    "google-import": "bun run import-to-google-calendar.ts",
+    "google-import:config": "bun run import-to-google-calendar.ts --"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "googleapis": "^171.4.0"
+  }
+}
