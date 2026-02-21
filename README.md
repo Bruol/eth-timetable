@@ -2,6 +2,8 @@
 
 A CLI tool for splitting ETH Zurich's MyStudies ICS timetable files into separate calendar files by course and event type (Lecture/Exercise/Seminar), with optional import to Google Calendar.
 
+![Hero Image](./assets/hero.png)
+
 ## Why?
 
 ETH Zurich's MyStudies exports a single ICS file containing all your courses. This is fine if you want everything in one calendar, but often you want:
